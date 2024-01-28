@@ -28,11 +28,7 @@
                 </thead>
                 <tbody>
                     <?php
-                        $conn = mysqli_connect('localhost','root','130110Ov-', 'db_unklab');
-
-                        if(!$conn){
-                            die("Connection failed: " . mysqli_connect_error());
-                        }
+                    require "./database/index.php";
 
                         $sql = "SELECT * FROM tbl_students";
                         $result = mysqli_query($conn, $sql);
@@ -67,30 +63,35 @@
                     <h1 class="modal-title fs-5 text-white" id="addStudentModalLabel">Add Student</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form class="d-flex flex-column row-gap-3" id="addStudentForm">
-                        <div>
-                            <label for="reg_number" class="form-label">Registration Number</label>
-                            <input type="text" class="form-control" id="reg_number" name="reg_number" required>
-                        </div>
-                        <div>
-                            <label for="nim_number" class="form-label">NIM Number</label>
-                            <input type="text" class="form-control" id="nim_number" name="nim_number" required>
-                        </div>
-                        <div>
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div>
-                            <label for="fullname" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullname" name="fullname" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
-                </div>
+                <form id="save_student">
+                    <div class="modal-body">
+                            <div>
+                                <label for="reg_number" class="form-label">Registration Number</label>
+                                <input type="text" class="form-control" id="reg_number" name="reg_number" required>
+                            </div>
+                            <div>
+                                <label for="nim_number" class="form-label">NIM Number</label>
+                                <input type="text" class="form-control" id="nim_number" name="nim_number" required>
+                            </div>
+                            <div> 
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div>
+                                <label for="fullname" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullname" name="fullname" required>
+                            </div>
+                            <div> 
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" name="insert_student">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -100,14 +101,40 @@
             $("#addStudentBtn").click(function(){
                 $("#addStudentModal").modal("show");
             });
-        });
 
-        $("#submitBtn").click(function(event){
+            $("#submitBtn").click(function(event){
             event.preventDefault();
 
-            var formData = $("#addStudentForm").serialize();
-            console.log('formdataa', formData);
+ 
+            const  reg_number = $("#reg_number").val();
+            const nim_number = $("#nim_number").val();
+            const email = $("#email").val();
+            const fullname = $("#fullname").val();
+            const password = $("#password").val();
+
+            $.ajax({
+                type: "POST",
+                url: "service/student_service.php",
+                data: {
+                    insert_student: true,
+                    reg_number,
+                    nim_number,
+                    email,
+                    fullname,
+                    password
+                },
+             
+                success: function (response){
+                    const response_parse = jQuery.parseJSON(response);
+                    $("#addStudentModal").modal('hide');
+                    alert(response_parse.message);
+                    location.reload();
+                }
+            })
         })
+        });
+
+
     </script>
 </body>
 </html>

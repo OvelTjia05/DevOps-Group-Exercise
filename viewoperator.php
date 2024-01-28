@@ -29,12 +29,8 @@
                     </thead>
                     <tbody>
                         <?php
-                            $conn = mysqli_connect('localhost','root','130110Ov-', 'db_unklab');
-
-                            if(!$conn){
-                                die("Connection failed: " . mysqli_connect_error());
-                            }
-
+                            require "./database/index.php";
+                            
                             $sql = "SELECT * FROM tbl_operator";
                             $result = mysqli_query($conn, $sql);
 
