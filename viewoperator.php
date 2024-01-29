@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Data Operator</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </head>
-    <body>
         <div class="container">
             <h1>Data Operator</h1>
             <div class="mb-3 d-flex flex-row-reverse">
@@ -29,34 +18,34 @@
                     </thead>
                     <tbody>
                         <?php
-                            require "./database/index.php";
-                            
-                            $sql = "SELECT * FROM tbl_operator";
-                            $result = mysqli_query($conn, $sql);
+                        require "./database/index.php";
 
-                            if(mysqli_num_rows($result) > 0){
-                                while($row = mysqli_fetch_assoc($result)){
-                                    echo "<tr>";
-                                    echo "<td>" . $row['nip'] . "</td>";
-                                    echo "<td>" . $row['email'] . "</td>";
-                                    echo "<td>" . $row['fullname'] . "</td>";
-                                    echo "<td>" . $row['phone_number'] . "</td>";
-                                    echo "<td>" . $row['role'] . "</td>";
-                                    echo "<td>" . $row['created_at'] . "</td>";
-                                    echo "<td>" . $row['updated_at'] . "</td>";
-                                    echo "</tr>";
-                                }
-                            } else{
-                                echo "<tr><td colspan='6'>Tidak ada data mahasiswa.</td></tr>";
+                        $sql = "SELECT * FROM tbl_operator";
+                        $result = mysqli_query($conn, $sql);
+
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                echo "<tr>";
+                                echo "<td>" . $row['nip'] . "</td>";
+                                echo "<td>" . $row['email'] . "</td>";
+                                echo "<td>" . $row['fullname'] . "</td>";
+                                echo "<td>" . $row['phone_number'] . "</td>";
+                                echo "<td>" . $row['role'] . "</td>";
+                                echo "<td>" . $row['created_at'] . "</td>";
+                                echo "<td>" . $row['updated_at'] . "</td>";
+                                echo "</tr>";
                             }
+                        } else {
+                            echo "<tr><td colspan='6'>Tidak ada data mahasiswa.</td></tr>";
+                        }
 
-                            mysqli_close($conn);
+                        mysqli_close($conn);
                         ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="addOperatorModal" tabindex="-1" aria-labelledby="addOperatorModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -98,18 +87,16 @@
         </div>
 
         <script>
-            $(document).ready(function(){
-                $("#addOperatorBtn").click(function(){
+            $(document).ready(function() {
+                $("#addOperatorBtn").click(function() {
                     $("#addOperatorModal").modal("show");
                 });
             });
 
-            $("#submitBtn").click(function(event){
+            $("#submitBtn").click(function(event) {
                 event.preventDefault();
 
                 var formData = $("#addOperatorForm").serialize();
                 console.log('formdataa', formData);
             })
         </script>
-    </body>
-</html>
