@@ -69,6 +69,10 @@
                                 <input type="text" class="form-control" id="fullname" name="fullname" required>
                             </div>
                             <div>
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div>
                                 <label for="phone_number" class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="phone_number" name="phone_number" required>
                             </div>
@@ -91,12 +95,42 @@
                 $("#addOperatorBtn").click(function() {
                     $("#addOperatorModal").modal("show");
                 });
+
+                $("#submitBtn").click(function(event) {
+                    event.preventDefault();
+
+
+                    const nip = $("#nip").val();
+                    const email = $("#email").val();
+                    const fullname = $("#fullname").val();
+                    const password = $("#password").val();
+                    const phone_number = $("#phone_number").val();
+                    const role = $("#role").val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "service/operator_service.php",
+                        data: {
+                            insert_operator: true,
+                            nip,
+                            email,
+                            fullname,
+                            password,
+                            phone_number,
+                            role
+                        },
+
+                        success: function(response) {
+                            const response_parse = jQuery.parseJSON(response);
+                            $("#addOperatorModal").modal('hide');
+                            $("#addOperatorModal").on('hidden.bs.modal', function() {
+                                $(this).removeData('bs.modal');
+                            });
+                            console.log("halo")
+                            loadContent("viewoperator.php");
+                            alert(response_parse.message);
+                        }
+                    })
+                })
             });
-
-            $("#submitBtn").click(function(event) {
-                event.preventDefault();
-
-                var formData = $("#addOperatorForm").serialize();
-                console.log('formdataa', formData);
-            })
         </script>

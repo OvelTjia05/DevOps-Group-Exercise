@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data History</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
-<body>
     <div class="container">
         <h1>Data History</h1>
         <div class="mb-3 d-flex flex-row-reverse">
@@ -36,41 +21,37 @@
                 </thead>
                 <tbody>
                     <?php
-                        $conn = mysqli_connect('localhost','root','130110Ov-', 'db_unklab');
+                    require "./database/index.php";
 
-                        if(!$conn){
-                            die("Connection failed: " . mysqli_connect_error());
+                    $sql = "SELECT * FROM tbl_attendance_history";
+                    $result = mysqli_query($conn, $sql);
+
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<tr>";
+                            echo "<td>" . $row['email_student'] . "</td>";
+                            echo "<td>" . $row['name_subject'] . "</td>";
+                            echo "<td>" . $row['email_lecturer'] . "</td>";
+                            echo "<td>" . $row['student_lat'] . "</td>";
+                            echo "<td>" . $row['student_long'] . "</td>";
+                            echo "<td>" . $row['distance'] . "</td>";
+                            echo "<td>" . $row['time_take_attendance'] . "</td>";
+                            echo "<td>" . $row['status'] . "</td>";
+                            echo "<td>" . $row['note'] . "</td>";
+                            echo "<td>" . $row['created_at'] . "</td>";
+                            echo "</tr>";
                         }
+                    } else {
+                        echo "<tr><td colspan='6'>Tidak ada data History.</td></tr>";
+                    }
 
-                        $sql = "SELECT * FROM tbl_attendance_history";
-                        $result = mysqli_query($conn, $sql);
-
-                        if(mysqli_num_rows($result) > 0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo "<tr>";
-                                echo "<td>" . $row['email_student'] . "</td>";
-                                echo "<td>" . $row['name_subject'] . "</td>";
-                                echo "<td>" . $row['email_lecturer'] . "</td>";
-                                echo "<td>" . $row['student_lat'] . "</td>";
-                                echo "<td>" . $row['student_long'] . "</td>";
-                                echo "<td>" . $row['distance'] . "</td>";
-                                echo "<td>" . $row['time_take_attendance'] . "</td>";
-                                echo "<td>" . $row['status'] . "</td>";
-                                echo "<td>" . $row['note'] . "</td>";
-                                echo "<td>" . $row['created_at'] . "</td>";
-                                echo "</tr>";
-                            }
-                        } else{
-                            echo "<tr><td colspan='6'>Tidak ada data History.</td></tr>";
-                        }
-
-                        mysqli_close($conn);
+                    mysqli_close($conn);
                     ?>
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="addHistoryModal" tabindex="-1" aria-labelledby="addHistoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
@@ -129,21 +110,21 @@
     </div>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             //Trigger modal show
-            $("#addHistoryBtn").click(function(){
+            $("#addHistoryBtn").click(function() {
                 $("#addHistoryModal").modal("show");
             });
 
             //date picker and map function
-            $('#addHistoryModal').on('shown.bs.modal', function () {
-                var map = L.map('mapid').setView([1.4175187,124.9840248], 16);
-                
+            $('#addHistoryModal').on('shown.bs.modal', function() {
+                var map = L.map('mapid').setView([1.4175187, 124.9840248], 16);
+
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                 }).addTo(map);
 
-                var marker = L.marker([1.4175187,124.9840248]).addTo(map);
+                var marker = L.marker([1.4175187, 124.9840248]).addTo(map);
 
                 map.on('click', function(e) {
                     marker.setLatLng(e.latlng);
@@ -151,15 +132,38 @@
                     $('#student_long').val(e.latlng.lng);
                 });
             });
+
+            //Submit action
+            $("#submitBtn").click(function(event) {
+                event.preventDefault();
+
+                var formData = $("#addHistoryForm").serializeArray();
+                formData.push({
+                    name: "insert_history",
+                    value: true
+                });
+
+                let dataSubmit = {};
+                formData.forEach(item => {
+                    dataSubmit[item.name] = item.value;
+                })
+
+                console.log("ini data submit: ", dataSubmit)
+
+                $.ajax({
+                    type: "POST",
+                    url: "service/history_service.php",
+                    data: dataSubmit,
+                    success: function(response) {
+                        const response_parse = jQuery.parseJSON(response);
+                        $("#addHistoryModal").modal('hide');
+                        $("#addHistoryModal").on('hidden.bs.modal', function() {
+                            $(this).removeData('bs.modal');
+                        });
+                        loadContent("viewhistory.php");
+                        alert(response_parse.message);
+                    }
+                })
+            })
         });
-
-        //Submit action
-        $("#submitBtn").click(function(event){
-            event.preventDefault();
-
-            var formData = $("#addHistoryForm").serializeArray();
-            console.log('formdataa', formData);
-        })
     </script>
-</body>
-</html>

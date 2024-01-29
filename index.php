@@ -5,9 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
         // Fungsi untuk memuat konten dinamis berdasarkan tautan yang diklik
@@ -26,23 +31,33 @@
     </script>
 
     <style>
+        .text-header {
+            font-size: 15px;
+            margin-left: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
         #dynamicContent {
             margin-left: 200px !important;
             padding: 1px 16px;
+            background-color: #F5F7F8;
+            min-height: 800px;
+            position: relative;
         }
 
         .sidebar {
             margin: 0;
             padding: 0;
             width: 200px;
-            background-color: #343a40;
+            background-color: #45474B;
             position: fixed;
             height: 100%;
             overflow: auto;
         }
 
         .nav-link {
-            background-color: #343a40;
+            background-color: inherit;
             border: none;
             color: white;
             height: 45px;
@@ -71,7 +86,7 @@
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                     <a href="./index.php" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                         <img src="./assets/img/LOGO_UNIVERSITAS_KLABAT.png" alt="" class="fs-5 d-inline d-sm-inline img-fluid" style="width: 60px; margin-left: -10px">
-                        <span style="font-size: 15px; margin-left: 10px">Universitas Klabat</span>
+                        <span class="text-header">Universitas Klabat</span>
                     </a>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                         <li class="nav-item">
@@ -90,16 +105,16 @@
                             </button>
                         </li>
                         <li>
-                            <button href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <button id="class" href="viewclasses.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                                 <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Class</span></button>
                         </li>
                         <li>
-                            <button href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <button id="attendance_list" href="viewattendance.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                                 <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Attendance List</span>
                             </button>
                         </li>
                         <li>
-                            <button href="#" class="nav-link px-0 align-middle">
+                            <button id="attendance_history" href="viewhistory.php" class="nav-link px-0 align-middle">
                                 <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Attendance History</span> </button>
                         </li>
                     </ul>
@@ -144,6 +159,38 @@
                 $('.nav-link span').css('color', 'white');
                 $('#operator span').css('color', '#7EBDC2');
             })
+
+            $("#class").click(function(e) {
+                e.preventDefault();
+                var targetUrl = $(this).attr('href');
+                loadContent(targetUrl);
+
+
+                $('.nav-link span').css('color', 'white');
+                $('#class span').css('color', '#7EBDC2');
+            })
+
+            $("#attendance_list").click(function(e) {
+                e.preventDefault();
+                var targetUrl = $(this).attr('href');
+                loadContent(targetUrl);
+
+
+                $('.nav-link span').css('color', 'white');
+                $('#attendance_list span').css('color', '#7EBDC2');
+            })
+
+            $("#attendance_history").click(function(e) {
+                e.preventDefault();
+                var targetUrl = $(this).attr('href');
+                loadContent(targetUrl);
+
+
+                $('.nav-link span').css('color', 'white');
+                $('#attendance_history span').css('color', '#7EBDC2');
+            })
+
+
 
         });
     </script>
