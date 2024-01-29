@@ -17,7 +17,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
-                        <tr>
+                        <tr class="table-primary">
                             <th class="text-center">NIP</th>
                             <th class="text-center">Email</th>
                             <th class="text-center">Full Name</th>
